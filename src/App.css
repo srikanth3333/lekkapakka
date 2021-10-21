@@ -619,3 +619,16 @@ ul {
 .tracking {
     padding: 6em 0em;
 }
+
+@media only screen and (max-width: 1077px) {
+    .scrolling-wrapper .col-lg-3 {
+      width: 40%
+    }
+}
+
+
+@media only screen and (max-width: 674px) {
+    .scrolling-wrapper .col-lg-3 {
+      width: 80%
+    }
+}
