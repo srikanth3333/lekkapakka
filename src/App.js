@@ -1,3 +1,4 @@
+import React, {useState,useEffect} from 'react';
 import './App.css'
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
@@ -19,6 +20,15 @@ import {
 } from "react-router-dom";
 
 function App() {
+
+
+  const [loggedIn,setLoggedIn] = useState(null)
+
+  useEffect(() => {
+    let token = localStorage.getItem('token')
+    setLoggedIn(token)
+  }, [])
+
   return (
     <>
       <Router>
@@ -35,7 +45,7 @@ function App() {
               <Route exact path="/">
                 <Home />
               </Route>
-              <Route exact path="/productDetail">
+              <Route exact path="/productDetail/:id">
                 <ProductDetail />
               </Route>
               <Route exact path="/customerReview">

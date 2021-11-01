@@ -1,8 +1,46 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Header from '../includes/Header';
 import {Link} from 'react-router-dom';
+import axios from 'axios'
 
 function Login() {
+
+    const [username, setUsername] = useState(null)
+    const [password, setPassword] = useState(null)
+
+    function validateEmail(email) {
+        const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        console.log(email)
+        return re.test(email);
+    }
+
+    const handleLogin = (e) => {
+        e.preventDefault();  
+        let data = {}
+        if(validateEmail(username) == true) {
+            data = {
+                email : username,
+                password: password
+            }
+        }else {
+            alert("Enter a valid Email")
+        }
+
+        axios.post("https://toolx321.herokuapp.com/login", data)
+        .then(res => {
+            if(res.data.message == true) {
+                localStorage.setItem('token', username)
+                window.location.href = "/"
+            }else {
+                alert(res.data.info)
+            }
+        })
+        .catch(err => { 
+            console.log(err)
+        })
+    }
+
+
     return (
         <>
         <Header />
@@ -19,14 +57,14 @@ function Login() {
                         <h2 className="text-center">
                             Login Your Account
                         </h2>
-                        <form className="form-box">
+                        <form className="form-box" onSubmit={handleLogin}> 
                             <div className="form-group">
                                 <label htmlFor="">Email or mobile number</label>    
-                                <input type="text" className="form-control" placeholder="Enter Email or mobile number" />
+                                <input type="text" required onChange={(e) => setUsername(e.target.value)} className="form-control" placeholder="Enter Email or mobile number" />
                             </div>
                             <div className="form-group">
                                 <label htmlFor="">Password</label> 
-                                <input type="text" className="form-control" placeholder="Enter Password" />
+                                <input type="password" required onChange={(e) => setPassword(e.target.value)} className="form-control" placeholder="Enter Password" />
                             </div>
                             <div className="form-group d-flex justify-content-between align-items-center">
                                 <div>
@@ -42,7 +80,7 @@ function Login() {
                                 </div>
                             </div>
                             <div className="btn-box">
-                                <div className="btn btn-warning w-100">Continue</div>
+                                <button type="submit" className="btn btn-warning w-100">Continue</button>
                             </div>
                         </form>
 

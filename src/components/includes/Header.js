@@ -1,7 +1,14 @@
-import React from 'react';
+import React, {useState,useEffect} from 'react';
 import {Link} from 'react-router-dom';
 
 function Header({headerBgColor,textColor}) {
+
+    const [loggedIn,setLoggedIn] = useState(null)
+
+    useEffect(() => {
+        let token = localStorage.getItem('token')
+        setLoggedIn(token)
+    }, [])
 
     return (
         <section className={`auth_header fixed-auth-top ${headerBgColor}`}>
@@ -11,8 +18,20 @@ function Header({headerBgColor,textColor}) {
                         <h1 className="logo-text">LEKKA <span className="text-warning">PAKKA</span></h1>
                     </div>
                     <div>
-                        <Link to="/" className={`btn btn-default ${textColor}`}>Login</Link>
-                        <Link to="/register" className="btn btn-warning">Sign Up</Link>
+                        {
+                            loggedIn !== null 
+                            ?
+                                <button onClick={() => {
+                                    localStorage.clear()
+                                    window.location.href = "/"
+                                }} className={`btn btn btn-warning`}>Logout</button>
+                            :
+                            <>
+                                <Link to="/login" className={`btn btn-default ${textColor}`}>Login</Link>
+                                <Link to="/register" className="btn btn-warning">Sign Up</Link>
+                            </>
+                        }
+                        
                     </div>
                 </div>
                 

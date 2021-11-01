@@ -1,10 +1,29 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import Gallery from '../includes/Gallery';
 import Header from '../includes/Header';
 import Footer from '../includes/Footer';
 import ProductItem from '../includes/ProductItem';
+import {useParams} from 'react-router-dom';
+import axios from 'axios';
 
 function ProductDetail() {
+
+
+    const [product, setProduct] = useState(undefined)
+
+    let {id} = useParams()
+    
+    const _productDetail = () => {
+        axios.get(`https://toolx321.herokuapp.com/productDetail?id=${id}`)
+        .then(res => setProduct(res.data))
+        .catch(err => console.log(err))
+    }
+
+
+    useEffect(() => {
+        _productDetail()
+    }, [])
+
     return (
         <>
             <Header  textColor="text-white fw-normal" headerBgColor="bg-dark py-2" />
@@ -12,18 +31,18 @@ function ProductDetail() {
                 <div className="container-fluid px-lg-5">
                     <div className="row">
                         <div className="col-lg-5">
-                            <Gallery />
+                            <Gallery data={product ? product.image : null} />
                         </div>
                         <div className="col-lg-7">
                         <div className="d-flex flex-wrap justify-content-between">
                             <div>
                                 <h2 className="product-detail-title">
-                                    Apple - Red Delicious, Regular
+                                    {product ? product.name : null}
                                 </h2>
                                 <span className="text-light">Veg</span>
                                 <h5 className="product-detail-price">
                                     <span className="text-light small"><del>$222.22</del></span>
-                                    <b>$200.00</b>
+                                    <b>${product ? product.price : null}</b>
                                     <span className="text-light text-danger small ps-2">You Save 20%</span>
                                     <span className="text-light small">Inclusive of all taxes</span>
                                 </h5>
@@ -53,17 +72,16 @@ function ProductDetail() {
                             <p className="my-3">Shipping calculated at checkout.</p>
                             <button className="btn btn-dark my-3">Add to cart</button>
                             <h6 className="my-3"><b>About the Product</b></h6>
-                            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Rem tempora tempore nisi assumenda nihil, nostrum voluptatem aut asperiores deserunt, culpa exercitationem dolore dolor voluptas suscipit expedita dolores cumque necessitatibus. Consectetur!</p>
+                            <p>{product ? product.description : null}</p>
                         </div>
                     </div>
                     <div className="my-4">
                         <h6><b>Product Details</b></h6>
-                        <p className="text-light-color">Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis porro nesciunt velit non dolores laboriosam possimus laudantium, sapiente earum, animi voluptates vitae maiores exercitationem labore cupiditate aperiam quia ab dolorum tempora tenetur nostrum quas sed quos veritatis? Aspernatur necessitatibus rem rerum tenetur ratione, quas fuga. Corrupti aliquam blanditiis rem perferendis.</p>
+                        <p className="text-light-color">{product ? product.description : null}</p>
                     </div>
                     <div className="my-4">
                         <h6><b>Product Specifications</b></h6>
-                        <p className="text-light-color">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quis quas recusandae placeat explicabo odit vitae omnis laborum debitis rem inventore, ratione ad iure possimus aspernatur beatae dignissimos id soluta ipsa illo, sed necessitatibus nam ut minima. Illo vero unde neque voluptate fuga eius fugit commodi nostrum id dolore, ex sed dignissimos necessitatibus accusantium nam. Nemo mollitia adipisci odit rem. Veniam illum sint cupiditate dolores sequi nesciunt ut voluptates placeat fugiat?</p>
-                        <p className="text-light-color">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quis quas recusandae placeat explicabo odit vitae omnis laborum debitis rem inventore, ratione ad iure possimus aspernatur beatae dignissimos id soluta ipsa illo, sed necessitatibus nam ut minima. Illo vero unde neque voluptate fuga eius fugit commodi nostrum id dolore, ex sed dignissimos necessitatibus accusantium nam. Nemo mollitia adipisci odit rem. Veniam illum sint cupiditate dolores sequi nesciunt ut voluptates placeat fugiat?</p>
+                        <p className="text-light-color">{product ? product.description : null}</p>
                     </div>
                     <div>
                         <h5><b>Compare with similar products</b></h5>

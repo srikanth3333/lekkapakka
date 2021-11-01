@@ -26,6 +26,15 @@ html,body {
 
 /*Globals */
 
+a:hover {
+    color: inherit;
+    
+}
+
+.list-category {
+    cursor: pointer;
+}
+
 .logo-text {
     font-size: 1.8em;
     color: #fff;

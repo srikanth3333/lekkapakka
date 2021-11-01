@@ -1,12 +1,36 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import Header from '../includes/Header';
 import AwesomeSlider from 'react-awesome-slider';
 import 'react-awesome-slider/dist/styles.css';
 import ProductItem from '../includes/ProductItem';
 import Footer from '../includes/Footer';
 import banner from '../assets/banner.jpg';
+import axios from 'axios';
 
 function Home() {
+
+    const [categories, setCategories] = useState([])
+    const [products, setProducts] = useState([])
+    const [activeIndex, setActiveIndex] = useState(0)
+
+    const getCategories = () => {
+        axios.get("https://toolx321.herokuapp.com/categories")
+        .then(res => setCategories(res.data))
+        .catch(err => console.error(err))
+    }
+
+
+    const getProducts = () => {
+        axios.get("https://toolx321.herokuapp.com/productList")
+        .then(res => setProducts(res.data))
+        .catch(err => console.error(err))
+    }
+
+    useEffect(() => {
+        getCategories()
+        getProducts()
+    }, [])
+
     return (
         <>
             <Header  textColor="text-white fw-normal" headerBgColor="bg-dark py-2" />
@@ -35,12 +59,18 @@ function Home() {
                                 </button>
                                 </h2>
                                 <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                <div class="accordion-body">
-                                    <ul>
-                                        <li>Vegetables</li>
-                                        <li class="active">Fresh Fruits</li>
-                                        <li>Dry Fruits</li>
-                                    </ul>
+                                <div class="accordion-body list-category">
+                                    {
+                                        categories ? 
+                                        categories.map((category, i) => (
+                                            <ul>
+                                                <li onClick={() => setActiveIndex(i)} class={activeIndex == i ? `active` : ''}>{category.name}</li>
+                                            </ul>
+                                        ))
+                                        :
+                                        <p>No Categories Found</p>
+                                    }
+                                    
                                 </div>
                                 </div>
                             </div>
@@ -136,8 +166,8 @@ function Home() {
                             </div>
 
                             <div className="product-item-list">
-                                <ProductItem />
-                                <ProductItem />
+                                <ProductItem productsList={products} />
+                                {/* <ProductItem  /> */}
                             </div>
                         </div>
                     </div>
